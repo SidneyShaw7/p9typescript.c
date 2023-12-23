@@ -1,0 +1,13 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 80,
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "options": {
+        "semi": true
+      }
+    }
+  ]
+}
