@@ -11,10 +11,6 @@ const cors_1 = __importDefault(require("cors"));
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 const PORT = 3001;
-app.get('/api/ping', (_req, res) => {
-    console.log('someone pinged here');
-    res.send('shpong');
-});
 app.use('/api/diagnoses', diagnoses_1.default);
 app.use('/api/patients', patients_1.default);
 app.listen(PORT, () => {
