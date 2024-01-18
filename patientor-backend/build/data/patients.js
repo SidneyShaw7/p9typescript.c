@@ -48,6 +48,7 @@ const data = [
 ];
 const patientEntries = data.map((obj) => {
     const object = (0, utils_1.default)(obj);
+    object.entries = [];
     object.id = obj.id;
     return object;
 });
