@@ -1,4 +1,6 @@
 import { Alert } from '@mui/material';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
 
 import { useEffect, useState } from 'react';
 
@@ -47,7 +49,12 @@ const PatientInformationPage = ({ id }: Props) => {
   return (
     <div>
       {error && <Alert severity="error">{error}</Alert>}
-      {patient && <h4>{patient.name}</h4>}
+      {patient && (
+        <h4>
+          {patient.name}
+          {patient.gender === 'male' ? <MaleIcon /> : <FemaleIcon />}
+        </h4>
+      )}
       {patient && <span>{patient.dateOfBirth}</span>}
       {patient && <span>{patient.ssn}</span>}
       {patient && <span>{patient.occupation}</span>}
