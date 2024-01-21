@@ -1,4 +1,4 @@
-import patients from '../../data/patients';
+import patients from '../../data/patients-full';
 import { NonSensitivePatient, Patient, NewPatientEntry } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,7 +19,7 @@ const getPatientById = (id: string): Patient | undefined => {
 
 const addPatient = (entry: NewPatientEntry): Patient => {
   const newPatient = {
-    entries: undefined,
+    entries: [],
     id: uuidv4(),
     ...entry,
   };
