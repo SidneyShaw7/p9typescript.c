@@ -9,12 +9,24 @@ import { useMatch } from 'react-router-dom';
 import axios from 'axios';
 
 import patientService from '../../services/patients';
+import diagnosesService from '../../services/diagnoses';
 
-import { Patient } from '../../types';
+import { Entry, Patient } from '../../types';
+import { Diagnoses } from '../../types';
+
+// const EntryDetails: React.FC<{entry: Entry}> = ({entry}) => {
+//   switch (entry.type) {
+//     case 'Hospital':
+//       return <HospitalEntry />
+//     case 'OccupationalHealthcare':
+//     case 'HealthCheck':
+//   }
+// }
 
 const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient | undefined>();
+  const [diagnoses, setDiagnoses] = useState<Diagnoses[]>();
 
   const match = useMatch('/patients/:id');
   const id = match ? match.params.id : null;
@@ -46,6 +58,31 @@ const PatientInformationPage = () => {
     fetchPatient();
   }, [id]);
 
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        const fetchedDiagnoses = await diagnosesService.getAll();
+        if (fetchedDiagnoses) {
+          setDiagnoses(fetchedDiagnoses);
+        }
+      } catch (e) {
+        if (axios.isAxiosError(e)) {
+          if (e?.response?.data && typeof e?.response?.data === 'string') {
+            const message = e.response.data.replace('Something went wrong. Error: ', '');
+            console.error(message);
+            setError(message);
+          } else {
+            setError('Unrecognized axios error');
+          }
+        } else {
+          console.error('Unknown error', e);
+          setError('Unknown error');
+        }
+      }
+    };
+    fetchDiagnoses();
+  }, []);
+
   return (
     <div>
       {error && <Alert severity="error">{error}</Alert>}
@@ -60,7 +97,7 @@ const PatientInformationPage = () => {
           <div>{'Occupation: ' + patient.occupation}</div>
           <h4>entries</h4>
           <div>
-            {patient.entries ? (
+            {patient.entries.length > 0 ? (
               <div>
                 {patient.entries.map((entry) => (
                   <div key={entry.id}>
@@ -69,17 +106,24 @@ const PatientInformationPage = () => {
                     </p>
                     {entry.diagnosisCodes && (
                       <ul>
-                        {entry.diagnosisCodes.map((c) => (
-                          <li key={c}>{c}</li>
-                        ))}
+                        {entry.diagnosisCodes.map((code) => {
+                          if (diagnoses) {
+                            const diagnose = diagnoses.find((d) => d.code === code);
+                            return (
+                              <li key={code}>
+                                {code} - {diagnose ? diagnose.name : 'Unknown diagnosis'}
+                              </li>
+                            );
+                          }
+                        })}
                       </ul>
                     )}
                   </div>
                 ))}
               </div>
-            ) : Array.isArray(patient.entries) && patient.entries.length === 0 ? (
+            ) : (
               <p>No entries</p>
-            ) : null}
+            )}
           </div>
         </div>
       )}
