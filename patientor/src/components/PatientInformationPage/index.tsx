@@ -11,17 +11,8 @@ import axios from 'axios';
 import patientService from '../../services/patients';
 import diagnosesService from '../../services/diagnoses';
 
-import { Entry, Patient } from '../../types';
+import { Patient } from '../../types';
 import { Diagnoses } from '../../types';
-
-// const EntryDetails: React.FC<{entry: Entry}> = ({entry}) => {
-//   switch (entry.type) {
-//     case 'Hospital':
-//       return <HospitalEntry />
-//     case 'OccupationalHealthcare':
-//     case 'HealthCheck':
-//   }
-// }
 
 const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
