@@ -1,6 +1,23 @@
 import { Entry, Diagnoses } from '../../types';
-// import diagnoses from '../../services/diagnoses';
 import CommonEntryDetails from './CommonEntryDetails';
+import HospitalEntryComp from './HospitalEntryComp';
+import HealthCheckEntryComp from './HealthCheckEntryComp';
+import OccupationalHealthcareEntryComp from './OccupationalHealthcareEntryComp';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+
+const style = {
+  py: 0,
+  width: '100%',
+  maxWidth: 360,
+  borderRadius: 2,
+  border: '1px solid',
+  borderColor: 'divider',
+  backgroundColor: 'background.paper',
+};
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
@@ -10,44 +27,30 @@ const PatientEntryDetails: React.FC<{ entry: Entry; diagnoses: Diagnoses[] }> = 
   switch (entry.type) {
     case 'Hospital':
       return (
-        <div>
-          <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
-        </div>
+        <List style={style}>
+          <div>
+            <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+            <HospitalEntryComp entry={entry} />
+          </div>
+        </List>
       );
     case 'OccupationalHealthcare':
       return (
-        <div>
-          <p>
-            {entry.date} {entry.employerName}
-          </p>
-          <p>{entry.description}</p>
-          <p>
-            {entry.diagnosisCodes && (
-              <ul>
-                {entry.diagnosisCodes.map((code) => {
-                  if (diagnoses) {
-                    const diagnose = diagnoses.find((d) => d.code === code);
-                    return (
-                      <li key={code}>
-                        {code} - {diagnose ? diagnose.name : 'Unknown diagnosis'}
-                      </li>
-                    );
-                  }
-                })}
-              </ul>
-            )}
-          </p>
-          <p>diagnose by {entry.specialist}</p>
-        </div>
+        <List style={style}>
+          <div>
+            <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+            <OccupationalHealthcareEntryComp entry={entry} />
+          </div>
+        </List>
       );
     case 'HealthCheck':
       return (
-        <div>
-          <p>{entry.date}</p>
-          <p>{entry.description}</p>
-          <p>{entry.healthCheckRating}</p>
-          <p>diagnose by {entry.specialist}</p>
-        </div>
+        <List style={style}>
+          <div>
+            <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+            <HealthCheckEntryComp entry={entry} />
+          </div>
+        </List>
       );
     default:
       return assertNever(entry);

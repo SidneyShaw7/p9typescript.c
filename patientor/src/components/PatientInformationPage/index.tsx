@@ -14,6 +14,8 @@ import diagnosesService from '../../services/diagnoses';
 import { Patient } from '../../types';
 import { Diagnoses } from '../../types';
 
+import PatientEntryDetails from '../PatientEntryDetails';
+
 const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient | undefined>();
@@ -88,30 +90,10 @@ const PatientInformationPage = () => {
           <div>{'Occupation: ' + patient.occupation}</div>
           <h4>entries</h4>
           <div>
-            {patient.entries.length > 0 ? (
-              <div>
-                {patient.entries.map((entry) => (
-                  <div key={entry.id}>
-                    <p>
-                      {entry.date} - {entry.description}
-                    </p>
-                    {entry.diagnosisCodes && (
-                      <ul>
-                        {entry.diagnosisCodes.map((code) => {
-                          if (diagnoses) {
-                            const diagnose = diagnoses.find((d) => d.code === code);
-                            return (
-                              <li key={code}>
-                                {code} - {diagnose ? diagnose.name : 'Unknown diagnosis'}
-                              </li>
-                            );
-                          }
-                        })}
-                      </ul>
-                    )}
-                  </div>
-                ))}
-              </div>
+            {patient.entries.length > 0 && diagnoses ? (
+              patient.entries.map((entry) => {
+                return <PatientEntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />;
+              })
             ) : (
               <p>No entries</p>
             )}
