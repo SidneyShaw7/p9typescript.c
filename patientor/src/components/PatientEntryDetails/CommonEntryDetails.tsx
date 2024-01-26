@@ -7,11 +7,13 @@ import Divider from '@mui/material/Divider';
 const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Diagnoses[] }) => {
   return (
     <div>
-      <ListItem>
-        <ListItemText primary={entry.date} />
+      <ListItem sx={{ textAlign: 'left' }}>
+        <ListItemText secondary="entry date: " />
+        <ListItemText style={{ textAlign: 'left' }} primary={entry.date} />
       </ListItem>
       <Divider component="li" />
       <ListItem>
+        <ListItemText secondary="discription: " />
         <ListItemText primary={entry.description} />
       </ListItem>
       <Divider component="li" />

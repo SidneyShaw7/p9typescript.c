@@ -5,18 +5,17 @@ import HealthCheckEntryComp from './HealthCheckEntryComp';
 import OccupationalHealthcareEntryComp from './OccupationalHealthcareEntryComp';
 
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 
 const style = {
   py: 0,
   width: '100%',
-  maxWidth: 360,
-  borderRadius: 2,
+  maxWidth: 800,
+  borderRadius: 10,
   border: '1px solid',
   borderColor: 'divider',
   backgroundColor: 'background.paper',
+  margin: 5,
 };
 
 const assertNever = (value: never): never => {
@@ -28,28 +27,24 @@ const PatientEntryDetails: React.FC<{ entry: Entry; diagnoses: Diagnoses[] }> = 
     case 'Hospital':
       return (
         <List style={style}>
-          <div>
-            <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
-            <HospitalEntryComp entry={entry} />
-          </div>
+          <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+          <Divider />
+          <HospitalEntryComp entry={entry} />
         </List>
       );
     case 'OccupationalHealthcare':
       return (
         <List style={style}>
-          <div>
-            <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
-            <OccupationalHealthcareEntryComp entry={entry} />
-          </div>
+          <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+          <Divider />
+          <OccupationalHealthcareEntryComp entry={entry} />
         </List>
       );
     case 'HealthCheck':
       return (
         <List style={style}>
-          <div>
-            <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
-            <HealthCheckEntryComp entry={entry} />
-          </div>
+          <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+          <HealthCheckEntryComp entry={entry} />
         </List>
       );
     default:

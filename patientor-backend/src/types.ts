@@ -14,7 +14,7 @@ export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<Patient, 'id' | 'entries'>;
 
-// export interface Entry {}
+export type NewEntriesEntry = Omit<>
 
 export interface Patient {
   id: string;
@@ -25,6 +25,7 @@ export interface Patient {
   occupation: string;
   entries: Entry[];
 }
+
 
 export enum HealthCheckRating {
   'Healthy' = 0,

@@ -7,11 +7,11 @@ const HospitalEntryComp = ({ entry }: { entry: HospitalEntry }) => {
   return (
     <div>
       <ListItem>
-        <ListItemText primary={entry.discharge.date} />
+        <ListItemText primary={'discharge date: ' + entry.discharge.date} />
       </ListItem>
       <Divider component="li" />
       <ListItem>
-        <ListItemText primary={entry.discharge.criteria} />
+        <ListItemText primary={'criteria: ' + entry.discharge.criteria} />
       </ListItem>
     </div>
   );
