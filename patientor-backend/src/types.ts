@@ -14,7 +14,11 @@ export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<Patient, 'id' | 'entries'>;
 
-export type NewEntriesEntry = Omit<>
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+export type NewEntriesEntry = UnionOmit<Entry, 'id'>;
 
 export interface Patient {
   id: string;
@@ -25,7 +29,6 @@ export interface Patient {
   occupation: string;
   entries: Entry[];
 }
-
 
 export enum HealthCheckRating {
   'Healthy' = 0,
