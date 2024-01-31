@@ -1,4 +1,4 @@
-import { Alert } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 
@@ -15,11 +15,20 @@ import { Patient } from '../../types';
 import { Diagnoses } from '../../types';
 
 import PatientEntryDetails from '../PatientEntryDetails';
+import AddEntryModal from '../AddEntryModal';
 
 const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient | undefined>();
   const [diagnoses, setDiagnoses] = useState<Diagnoses[]>();
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   const match = useMatch('/patients/:id');
   const id = match ? match.params.id : null;
@@ -88,7 +97,13 @@ const PatientInformationPage = () => {
           <div>{'Date of birth: ' + patient.dateOfBirth}</div>
           <div>{'SSN: ' + patient.ssn}</div>
           <div>{'Occupation: ' + patient.occupation}</div>
-          <h4>entries</h4>
+          <h2>Entries</h2>
+          <div>
+            <Button variant="contained" onClick={() => openModal()}>
+              Add New Entry
+            </Button>
+            <AddEntryModal modalOpen={modalOpen} onClose={closeModal} />
+          </div>
           <div>
             {patient.entries.length > 0 && diagnoses ? (
               patient.entries.map((entry) => {

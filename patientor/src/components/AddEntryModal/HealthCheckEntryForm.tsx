@@ -1,6 +1,6 @@
 import { useState, SyntheticEvent } from 'react';
 
-import { NewEntriesEntry, HealthCheckRating, Diagnoses } from '../../types';
+import { NewEntriesEntry, HealthCheckRating } from '../../types';
 
 import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
 
@@ -58,7 +58,7 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
           label="diagnosis Codes"
           fullWidth
           value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes(target.value)}
+          onChange={({ target }) => setDiagnosisCodes([...diagnosisCodes, target.value])}
         />
         <InputLabel style={{ marginTop: 20 }}>Gender</InputLabel>
         <Select
