@@ -23,11 +23,9 @@ const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Dia
             if (diagnoses) {
               const diagnose = diagnoses.find((d) => d.code === code);
               return (
-                <li key={code}>
-                  <ListItem>
-                    <ListItemText primary={code + ' - ' + (diagnose ? diagnose.name : 'Unknown diagnosis')} />
-                  </ListItem>
-                </li>
+                <ListItem key={code}>
+                  <ListItemText primary={code + ' - ' + (diagnose ? diagnose.name : 'Unknown diagnosis')} />
+                </ListItem>
               );
             }
           })}

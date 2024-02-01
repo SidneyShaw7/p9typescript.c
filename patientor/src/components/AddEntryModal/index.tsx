@@ -1,4 +1,4 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 // import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, Divider, Alert } from '@mui/material';
 import HealthCheckEntryForm from './HealthCheckEntryForm';
@@ -12,8 +12,14 @@ interface Props {
 }
 
 const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
+  const [selectedEntryType, setSelectedEntryType] = useState('');
+
   const handleEntrySelect = (entryType: string) => {
-    switch (entryType) {
+    setSelectedEntryType(entryType);
+  };
+
+  const renderEntryForm = () => {
+    switch (selectedEntryType) {
       case 'hospital':
         return <HealthCheckEntryForm onCancel={onClose} onSubmit={onSubmit} />;
     }
@@ -26,9 +32,15 @@ const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
       <DialogTitle>Choose Entry Type</DialogTitle>
       <Divider />
       <DialogContent>
-        <Button onClick={() => handleEntrySelect('hospital')}>Hospital Entry</Button>
-        <Button onClick={() => handleEntrySelect('occupational')}>Occupational Entry</Button>
-        {error && <Alert severity="error">{error}</Alert>}
+        {selectedEntryType ? (
+          renderEntryForm()
+        ) : (
+          <>
+            <Button onClick={() => handleEntrySelect('hospital')}>Hospital Entry</Button>
+            <Button onClick={() => handleEntrySelect('occupational')}>Occupational Entry</Button>
+            {error && <Alert severity="error">{error}</Alert>}
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

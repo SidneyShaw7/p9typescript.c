@@ -30,7 +30,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
       const patient = await patientService.create(values);
-      setPatients(patients.concat(patient));
+      setPatients(patients.concat([...patients, patient]));
       setModalOpen(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

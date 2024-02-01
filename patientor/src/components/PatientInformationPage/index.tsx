@@ -11,7 +11,7 @@ import axios from 'axios';
 import patientService from '../../services/patients';
 import diagnosesService from '../../services/diagnoses';
 
-import { Patient } from '../../types';
+import { NewEntriesEntry, Patient } from '../../types';
 import { Diagnoses } from '../../types';
 
 import PatientEntryDetails from '../PatientEntryDetails';
@@ -21,6 +21,7 @@ const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient | undefined>();
   const [diagnoses, setDiagnoses] = useState<Diagnoses[]>();
+  // const [entries, setEntries] = useState<Entry>();
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const openModal = (): void => setModalOpen(true);
@@ -32,6 +33,8 @@ const PatientInformationPage = () => {
 
   const match = useMatch('/patients/:id');
   const id = match ? match.params.id : null;
+
+  // FETCHING PATIENT INFO
 
   useEffect(() => {
     const fetchPatient = async () => {
@@ -60,6 +63,8 @@ const PatientInformationPage = () => {
     fetchPatient();
   }, [id]);
 
+  // FETCHING DIAGNOSIS
+
   useEffect(() => {
     const fetchDiagnoses = async () => {
       try {
@@ -85,6 +90,31 @@ const PatientInformationPage = () => {
     fetchDiagnoses();
   }, []);
 
+  // SUBMITING NEW INFO ABOUT PATIENT
+
+  const submitNewEntry = async (values: NewEntriesEntry) => {
+    try {
+      if (id) {
+        const entry = await patientService.createEntry(values, id);
+        patient?.entries.concat([...patient.entries, entry]);
+        setModalOpen(false);
+      }
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === 'string') {
+          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          console.error(message);
+          setError(message);
+        } else {
+          setError('Unrecognized axios error');
+        }
+      } else {
+        console.error('Unknown error', e);
+        setError('Unknown error');
+      }
+    }
+  };
+
   return (
     <div>
       {error && <Alert severity="error">{error}</Alert>}
@@ -102,7 +132,7 @@ const PatientInformationPage = () => {
             <Button variant="contained" onClick={() => openModal()}>
               Add New Entry
             </Button>
-            <AddEntryModal modalOpen={modalOpen} onClose={closeModal} />
+            <AddEntryModal onSubmit={submitNewEntry} modalOpen={modalOpen} onClose={closeModal} />
           </div>
           <div>
             {patient.entries.length > 0 && diagnoses ? (
