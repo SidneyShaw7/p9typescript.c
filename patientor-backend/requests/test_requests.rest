@@ -1,0 +1,14 @@
+### 
+
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries
+content-type: application/json
+
+{
+  "date": "2015-01-02",
+  "type": "HealthCheck",
+  "description": "blabla",
+  "diagnosisCodes": "4:14,",
+  "healthCheckRating": 1,
+  "specialist": "MD House"
+}
+###

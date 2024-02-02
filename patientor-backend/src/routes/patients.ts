@@ -10,12 +10,12 @@ router.get('/', (_req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  const patient = res.send(patientService.getPatientById(req.params.id));
+  const patient = patientService.getPatientById(req.params.id);
 
   if (patient) {
     res.send(patient);
   } else {
-    res.sendStatus(400);
+    res.sendStatus(404);
   }
 });
 
@@ -33,10 +33,21 @@ router.post('/', (req, res) => {
   }
 });
 
-router.post(':id/entries', (req, res) => {
+router.get('/patients/:id/entries', (req, res) => {
+  const patientId = req.params.id;
+  const patient = patientService.getPatientById(patientId);
+
+  if (patient) {
+    res.json(patient.entries);
+  } else {
+    res.status(404).send('Patient not found');
+  }
+});
+
+router.post('/:id/entries', (req, res) => {
   try {
     const newEntry = toNewEntry(req.body);
-    const userId = window.location.pathname.split('/')[2];
+    const userId = req.params.id;
 
     const addedEntry = patientService.addEntry(newEntry, userId);
 

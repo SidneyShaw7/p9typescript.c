@@ -27,6 +27,7 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [specialist, setSpecialist] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(HealthCheckRating.Healthy);
+  // const [type, setType] = useState('HealthCheck');
 
   const onHealthCheckRatingChange = (e: SelectChangeEvent<string>) => {
     e.preventDefault();
@@ -41,6 +42,7 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
     e.preventDefault();
     onSubmit({
       description,
+      type: 'HealthCheck' as const,
       date,
       specialist,
       diagnosisCodes,

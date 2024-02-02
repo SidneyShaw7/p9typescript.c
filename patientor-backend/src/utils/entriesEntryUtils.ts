@@ -4,6 +4,7 @@ import {
   Discharge,
   SickLeave,
   HealthCheckRating,
+  OccupationalHealthcareEntry,
 } from '../types';
 
 const isString = (text: unknown): text is string => {
@@ -129,34 +130,78 @@ const parseSickLeave = (sickLeave: unknown): SickLeave => {
   throw new Error('Invalid Sick Leave entry');
 };
 
+// const parseOccupationalHealthcareEntry = (
+//   objectEntry: unknown
+// ): NewEntriesEntry => {
+//   if (!objectEntry || typeof objectEntry !== 'object')
+//     throw new Error('Incorrect or missing entry');
+
+//   if (
+//     'description' in objectEntry &&
+//     'date' in objectEntry &&
+//     'specialist' in objectEntry &&
+//     'diagnosisCodes' in objectEntry &&
+//     'type' in objectEntry &&
+//     'employerName' in objectEntry
+//   ) {
+//     const newEntriesEntry: NewEntriesEntry = {
+//       description: parseDescription(objectEntry.description),
+//       date: parseDate(objectEntry.date),
+//       specialist: parseSpecialist(objectEntry.specialist),
+//       type: 'OccupationalHealthcare',
+//       employerName: parseEmployerName(objectEntry.employerName),
+
+//     };
+
+//     if ('diagnosisCodes' in objectEntry)
+//       parseDiagnosisCodes(objectEntry.diagnosisCodes);
+
+//     if ('sickLeave' in objectEntry) parseSickLeave(objectEntry.sickLeave);
+
+//     return newEntriesEntry;
+//   }
+//   throw new Error('Incorrect data: a field is missing.');
+// };
 const parseOccupationalHealthcareEntry = (
   objectEntry: unknown
-): NewEntriesEntry => {
-  if (!objectEntry || typeof objectEntry !== 'object')
+): OccupationalHealthcareEntry => {
+  if (!objectEntry || typeof objectEntry !== 'object') {
     throw new Error('Incorrect or missing entry');
+  }
 
   if (
     'description' in objectEntry &&
     'date' in objectEntry &&
     'specialist' in objectEntry &&
-    'diagnosisCodes' in objectEntry &&
     'type' in objectEntry &&
     'employerName' in objectEntry
   ) {
+    // Directly construct the newEntriesEntry object with all mandatory fields
+    // and conditionally include optional fields using the spread operator.
     const newEntriesEntry: NewEntriesEntry = {
       description: parseDescription(objectEntry.description),
       date: parseDate(objectEntry.date),
       specialist: parseSpecialist(objectEntry.specialist),
       type: 'OccupationalHealthcare',
       employerName: parseEmployerName(objectEntry.employerName),
+      // // Conditionally include diagnosisCodes if present
+      // ...(objectEntry.diagnosisCodes && { diagnosisCodes: parseDiagnosisCodes(objectEntry.diagnosisCodes) }),
+      // // Conditionally include sickLeave if present
+      // ...(objectEntry.sickLeave && { sickLeave: parseSickLeave(objectEntry.sickLeave) }),
     };
 
-    if ('diagnosisCodes' in objectEntry)
-      parseDiagnosisCodes(objectEntry.diagnosisCodes);
+    if ('diagnosisCodes' in objectEntry) {
+      newEntriesEntry.diagnosisCodes = parseDiagnosisCodes(
+        objectEntry.diagnosisCodes
+      );
+    }
 
-    if ('sickLeave' in objectEntry) parseSickLeave(objectEntry.sickLeave);
+    // Assuming parseSickLeave is a function that validates and returns a correctly typed SickLeave or undefined
+    if ('sickLeave' in objectEntry && objectEntry.sickLeave) {
+      newEntriesEntry.sickLeave = parseSickLeave(objectEntry.sickLeave);
+    }
 
-    return newEntriesEntry;
+    return newEntriesEntry as OccupationalHealthcareEntry;
   }
   throw new Error('Incorrect data: a field is missing.');
 };
@@ -193,7 +238,6 @@ const parseHospitalEntry = (objectEntry: unknown): NewEntriesEntry => {
     'description' in objectEntry &&
     'date' in objectEntry &&
     'specialist' in objectEntry &&
-    'diagnosisCodes' in objectEntry &&
     'type' in objectEntry &&
     'discharge' in objectEntry
   ) {
@@ -204,6 +248,9 @@ const parseHospitalEntry = (objectEntry: unknown): NewEntriesEntry => {
       type: 'Hospital',
       discharge: parseDischarge(objectEntry.discharge),
     };
+
+    if ('diagnosisCodes' in objectEntry)
+      parseDiagnosisCodes(objectEntry.diagnosisCodes);
 
     return newEntriesEntry;
   }
