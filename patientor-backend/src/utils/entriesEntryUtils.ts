@@ -11,12 +11,7 @@ const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
-// const parseString = (value: unknown, fieldName: string): string => {
-//   if (!isString(value)) {
-//     throw new Error(`Incorrect or missing ${fieldName}`);
-//   }
-//   return value;
-// };
+// HANDLE BASE-ENTRY TYPEGUARDS
 
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
@@ -28,7 +23,6 @@ const parseDate = (date: unknown): string => {
   }
   return date;
 };
-// HANDLE BASE-ENTRY TYPEGUARDS
 
 const parseDescription = (description: unknown): string => {
   if (!isString(description)) {
@@ -68,34 +62,6 @@ const parseHealthCheckRating = (
   return rating;
 };
 
-const parseHealthCheckEntry = (objectEntry: unknown): NewEntriesEntry => {
-  if (!objectEntry || typeof objectEntry !== 'object')
-    throw new Error('Incorrect or missing entry');
-
-  if (
-    'description' in objectEntry &&
-    'date' in objectEntry &&
-    'specialist' in objectEntry &&
-    'diagnosisCodes' in objectEntry &&
-    'type' in objectEntry &&
-    'healthCheckRating' in objectEntry &&
-    typeof objectEntry.healthCheckRating === 'number'
-  ) {
-    const newEntriesEntry: NewEntriesEntry = {
-      description: parseDescription(objectEntry.description),
-      date: parseDate(objectEntry.date),
-      specialist: parseSpecialist(objectEntry.specialist),
-      type: 'HealthCheck',
-      healthCheckRating: parseHealthCheckRating(objectEntry.healthCheckRating),
-    };
-
-    if ('diagnosisCodes' in objectEntry)
-      parseDiagnosisCodes(objectEntry.diagnosisCodes);
-
-    return newEntriesEntry;
-  }
-  throw new Error('Incorrect data: a field is missing.');
-};
 
 // HANDLE OCCUPATIONAL-HEALTHCARE-ENTRY TYPEGUARDS
 
@@ -130,81 +96,6 @@ const parseSickLeave = (sickLeave: unknown): SickLeave => {
   throw new Error('Invalid Sick Leave entry');
 };
 
-// const parseOccupationalHealthcareEntry = (
-//   objectEntry: unknown
-// ): NewEntriesEntry => {
-//   if (!objectEntry || typeof objectEntry !== 'object')
-//     throw new Error('Incorrect or missing entry');
-
-//   if (
-//     'description' in objectEntry &&
-//     'date' in objectEntry &&
-//     'specialist' in objectEntry &&
-//     'diagnosisCodes' in objectEntry &&
-//     'type' in objectEntry &&
-//     'employerName' in objectEntry
-//   ) {
-//     const newEntriesEntry: NewEntriesEntry = {
-//       description: parseDescription(objectEntry.description),
-//       date: parseDate(objectEntry.date),
-//       specialist: parseSpecialist(objectEntry.specialist),
-//       type: 'OccupationalHealthcare',
-//       employerName: parseEmployerName(objectEntry.employerName),
-
-//     };
-
-//     if ('diagnosisCodes' in objectEntry)
-//       parseDiagnosisCodes(objectEntry.diagnosisCodes);
-
-//     if ('sickLeave' in objectEntry) parseSickLeave(objectEntry.sickLeave);
-
-//     return newEntriesEntry;
-//   }
-//   throw new Error('Incorrect data: a field is missing.');
-// };
-const parseOccupationalHealthcareEntry = (
-  objectEntry: unknown
-): OccupationalHealthcareEntry => {
-  if (!objectEntry || typeof objectEntry !== 'object') {
-    throw new Error('Incorrect or missing entry');
-  }
-
-  if (
-    'description' in objectEntry &&
-    'date' in objectEntry &&
-    'specialist' in objectEntry &&
-    'type' in objectEntry &&
-    'employerName' in objectEntry
-  ) {
-    // Directly construct the newEntriesEntry object with all mandatory fields
-    // and conditionally include optional fields using the spread operator.
-    const newEntriesEntry: NewEntriesEntry = {
-      description: parseDescription(objectEntry.description),
-      date: parseDate(objectEntry.date),
-      specialist: parseSpecialist(objectEntry.specialist),
-      type: 'OccupationalHealthcare',
-      employerName: parseEmployerName(objectEntry.employerName),
-      // // Conditionally include diagnosisCodes if present
-      // ...(objectEntry.diagnosisCodes && { diagnosisCodes: parseDiagnosisCodes(objectEntry.diagnosisCodes) }),
-      // // Conditionally include sickLeave if present
-      // ...(objectEntry.sickLeave && { sickLeave: parseSickLeave(objectEntry.sickLeave) }),
-    };
-
-    if ('diagnosisCodes' in objectEntry) {
-      newEntriesEntry.diagnosisCodes = parseDiagnosisCodes(
-        objectEntry.diagnosisCodes
-      );
-    }
-
-    // Assuming parseSickLeave is a function that validates and returns a correctly typed SickLeave or undefined
-    if ('sickLeave' in objectEntry && objectEntry.sickLeave) {
-      newEntriesEntry.sickLeave = parseSickLeave(objectEntry.sickLeave);
-    }
-
-    return newEntriesEntry as OccupationalHealthcareEntry;
-  }
-  throw new Error('Incorrect data: a field is missing.');
-};
 
 // HOSPITAL-ENTRY TRYPEGUARDS
 
@@ -230,50 +121,79 @@ const parseDischarge = (discharge: unknown): Discharge => {
   throw new Error('Invalid Discharge entry');
 };
 
-const parseHospitalEntry = (objectEntry: unknown): NewEntriesEntry => {
-  if (!objectEntry || typeof objectEntry !== 'object')
-    throw new Error('Incorrect or missing entry');
+// NEW ENTRY FINAL CHECK
+
+interface EntryInput {
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: string[];
+  type: 'HealthCheck' | 'OccupationalHealthcare' | 'Hospital';
+  employerName?: string;
+  healthCheckRating?: HealthCheckRating;
+  discharge?: Discharge;
+  sickLeave?: SickLeave;
+}
+
+const toNewEntry = (objectEntry: unknown): NewEntriesEntry => {
+  if (
+    typeof objectEntry !== 'object' ||
+    objectEntry === null ||
+    !('type' in objectEntry)
+  ) {
+    throw new Error('Incorrect or missing entry type');
+  }
+
+  const entry = objectEntry as EntryInput;
 
   if (
-    'description' in objectEntry &&
-    'date' in objectEntry &&
-    'specialist' in objectEntry &&
-    'type' in objectEntry &&
-    'discharge' in objectEntry
+    'description' in entry &&
+    'date' in entry &&
+    'specialist' in entry &&
+    'type' in entry
   ) {
-    const newEntriesEntry: NewEntriesEntry = {
-      description: parseDescription(objectEntry.description),
-      date: parseDate(objectEntry.date),
-      specialist: parseSpecialist(objectEntry.specialist),
-      type: 'Hospital',
-      discharge: parseDischarge(objectEntry.discharge),
+    const baseEntry = {
+      description: parseDescription(entry.description),
+      date: parseDate(entry.date),
+      specialist: parseSpecialist(entry.specialist),
+      diagnosisCodes: entry.diagnosisCodes
+        ? parseDiagnosisCodes(entry.diagnosisCodes)
+        : undefined,
     };
 
-    if ('diagnosisCodes' in objectEntry)
-      parseDiagnosisCodes(objectEntry.diagnosisCodes);
-
-    return newEntriesEntry;
+    switch (entry.type) {
+      case 'HealthCheck':
+        if (typeof entry.healthCheckRating !== 'number') {
+          throw new Error('Incorrect or missing healthCheckRating');
+        }
+        return {
+          ...baseEntry,
+          type: 'HealthCheck',
+          healthCheckRating: parseHealthCheckRating(entry.healthCheckRating),
+        };
+      case 'OccupationalHealthcare':
+        const occupationalEntry: Partial<OccupationalHealthcareEntry> = {
+          ...baseEntry,
+          type: 'OccupationalHealthcare',
+          employerName: parseEmployerName(entry.employerName),
+        };
+        if (entry.sickLeave) {
+          occupationalEntry.sickLeave = parseSickLeave(entry.sickLeave);
+        }
+        return occupationalEntry as OccupationalHealthcareEntry;
+      case 'Hospital':
+        return {
+          ...baseEntry,
+          type: 'Hospital',
+          discharge: parseDischarge(entry.discharge),
+        };
+      default:
+        throw new Error(`Unhandled entry type: ${entry.type}`);
+      // const exhaustiveCheck: never = entry.type;
+      // throw new Error(`Unhandled type: ${exhaustiveCheck}`);
+    }
   }
-  throw new Error('Incorrect data: a field is missing.');
-};
-
-const toNewEntry = (object: unknown): NewEntriesEntry => {
-  if (typeof object !== 'object' || object === null || !('type' in object)) {
-    throw new Error('Incorrect or missing entry');
-  }
-
-  const entryObject = object as { type: unknown };
-
-  switch (entryObject.type) {
-    case 'HealthCheck':
-      return parseHealthCheckEntry(object);
-    case 'OccupationalHealthcare':
-      return parseOccupationalHealthcareEntry(object);
-    case 'Hospital':
-      return parseHospitalEntry(object);
-    default:
-      throw new Error('Incorrect or missing type');
-  }
+  throw new Error('This should never happen.');
 };
 
 export default toNewEntry;
