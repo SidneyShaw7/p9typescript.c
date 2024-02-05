@@ -38,11 +38,9 @@ router.get('/patients/:id/entries', (req, res) => {
     const patientId = req.params.id;
     const patient = patientService_1.default.getPatientById(patientId);
     if (patient) {
-        // Assuming `patient.entries` exists and contains the entries.
         res.json(patient.entries);
     }
     else {
-        // If no patient is found with the given ID, send a 404 Not Found response.
         res.status(404).send('Patient not found');
     }
 });

@@ -62,7 +62,6 @@ const parseHealthCheckRating = (
   return rating;
 };
 
-
 // HANDLE OCCUPATIONAL-HEALTHCARE-ENTRY TYPEGUARDS
 
 interface PreValidationSickLeave {
@@ -95,7 +94,6 @@ const parseSickLeave = (sickLeave: unknown): SickLeave => {
   }
   throw new Error('Invalid Sick Leave entry');
 };
-
 
 // HOSPITAL-ENTRY TRYPEGUARDS
 

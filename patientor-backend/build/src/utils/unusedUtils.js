@@ -1,7 +1,7 @@
+"use strict";
 // const parseHealthCheckEntry = (objectEntry: unknown): NewEntriesEntry => {
 //   if (!objectEntry || typeof objectEntry !== 'object')
 //     throw new Error('Incorrect or missing entry');
-
 //   if (
 //     'description' in objectEntry &&
 //     'date' in objectEntry &&
@@ -18,22 +18,17 @@
 //       type: 'HealthCheck',
 //       healthCheckRating: parseHealthCheckRating(objectEntry.healthCheckRating),
 //     };
-
 //     if ('diagnosisCodes' in objectEntry)
 //       parseDiagnosisCodes(objectEntry.diagnosisCodes);
-
 //     return newEntriesEntry;
 //   }
 //   throw new Error('Incorrect data: a field is missing.');
 // };
-
-
 // const parseOccupationalHealthcareEntry = (
 //   objectEntry: unknown
 // ): NewEntriesEntry => {
 //   if (!objectEntry || typeof objectEntry !== 'object')
 //     throw new Error('Incorrect or missing entry');
-
 //   if (
 //     'description' in objectEntry &&
 //     'date' in objectEntry &&
@@ -48,14 +43,10 @@
 //       specialist: parseSpecialist(objectEntry.specialist),
 //       type: 'OccupationalHealthcare',
 //       employerName: parseEmployerName(objectEntry.employerName),
-
 //     };
-
 //     if ('diagnosisCodes' in objectEntry)
 //       parseDiagnosisCodes(objectEntry.diagnosisCodes);
-
 //     if ('sickLeave' in objectEntry) parseSickLeave(objectEntry.sickLeave);
-
 //     return newEntriesEntry;
 //   }
 //   throw new Error('Incorrect data: a field is missing.');
@@ -66,7 +57,6 @@
 //   if (!objectEntry || typeof objectEntry !== 'object') {
 //     throw new Error('Incorrect or missing entry');
 //   }
-
 //   if (
 //     'description' in objectEntry &&
 //     'date' in objectEntry &&
@@ -87,28 +77,22 @@
 //       // // Conditionally include sickLeave if present
 //       // ...(objectEntry.sickLeave && { sickLeave: parseSickLeave(objectEntry.sickLeave) }),
 //     };
-
 //     if ('diagnosisCodes' in objectEntry) {
 //       newEntriesEntry.diagnosisCodes = parseDiagnosisCodes(
 //         objectEntry.diagnosisCodes
 //       );
 //     }
-
 //     // Assuming parseSickLeave is a function that validates and returns a correctly typed SickLeave or undefined
 //     if ('sickLeave' in objectEntry && objectEntry.sickLeave) {
 //       newEntriesEntry.sickLeave = parseSickLeave(objectEntry.sickLeave);
 //     }
-
 //     return newEntriesEntry as OccupationalHealthcareEntry;
 //   }
 //   throw new Error('Incorrect data: a field is missing.');
 // };
-
-
 // const parseHospitalEntry = (objectEntry: unknown): NewEntriesEntry => {
 //   if (!objectEntry || typeof objectEntry !== 'object')
 //     throw new Error('Incorrect or missing entry');
-
 //   if (
 //     'description' in objectEntry &&
 //     'date' in objectEntry &&
@@ -123,22 +107,17 @@
 //       type: 'Hospital',
 //       discharge: parseDischarge(objectEntry.discharge),
 //     };
-
 //     if ('diagnosisCodes' in objectEntry)
 //       parseDiagnosisCodes(objectEntry.diagnosisCodes);
-
 //     return newEntriesEntry;
 //   }
 //   throw new Error('Incorrect data: a field is missing.');
 // };
-
 // const toNewEntry = (object: unknown): NewEntriesEntry => {
 //   if (typeof object !== 'object' || object === null || !('type' in object)) {
 //     throw new Error('Incorrect or missing entry');
 //   }
-
 //   const entryObject = object as { type: unknown };
-
 //   switch (entryObject.type) {
 //     case 'HealthCheck':
 //       return parseHealthCheckEntry(object);
@@ -150,7 +129,6 @@
 //       throw new Error('Incorrect or missing type');
 //   }
 // };
-
 // const parseString = (value: unknown, fieldName: string): string => {
 //       if (!isString(value)) {
 //         throw new Error(`Incorrect or missing ${fieldName}`);

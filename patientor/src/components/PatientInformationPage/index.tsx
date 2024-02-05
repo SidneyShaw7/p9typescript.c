@@ -95,9 +95,17 @@ const PatientInformationPage = () => {
   const submitNewEntry = async (values: NewEntriesEntry) => {
     try {
       if (id) {
+        console.log(id);
+        console.log(values);
+
         const entry = await patientService.createEntry(values, id);
-        patient?.entries.concat([...patient.entries, entry]);
-        setModalOpen(false);
+
+        if (patient) {
+          const updatedEntries = [...patient.entries, entry];
+          const updatedPatient = { ...patient, entries: updatedEntries };
+          setPatient(updatedPatient);
+          setModalOpen(false);
+        }
       }
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

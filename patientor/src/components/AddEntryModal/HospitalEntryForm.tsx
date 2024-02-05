@@ -1,51 +1,38 @@
 import { useState, SyntheticEvent } from 'react';
 
-import { NewEntriesEntry, HealthCheckRating } from '../../types';
+import { NewEntriesEntry, Discharge } from '../../types';
 
-import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Box } from '@mui/material';
+import { TextField, InputLabel, Grid, Button, Box } from '@mui/material';
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
 }
 
-interface HealthCheckRatingOption {
-  value: string;
-  label: string;
-}
-
-const healthCheckRatingOptions: HealthCheckRatingOption[] = Object.keys(HealthCheckRating)
-  .filter((key) => isNaN(Number(key)))
-  .map((key) => ({
-    value: key,
-    label: key,
-  }));
-
-const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
+const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
-  const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(HealthCheckRating.Healthy);
+  const [discharge, setDischarge] = useState<Discharge>({ date: '', criteria: '' });
 
-  const onHealthCheckRatingChange = (e: SelectChangeEvent<string>) => {
-    e.preventDefault();
-    const value = e.target.value;
-    const healthCheckRating = Object.keys(HealthCheckRating).find((k) => k === value);
-    if (healthCheckRating) {
-      setHealthCheckRating(HealthCheckRating[healthCheckRating as keyof typeof HealthCheckRating]);
-    }
+  const handleDichargeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setDischarge((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const addEntry = (e: SyntheticEvent) => {
     e.preventDefault();
     onSubmit({
       description,
-      type: 'HealthCheck' as const,
+      type: 'Hospital' as const,
       date,
       specialist,
       diagnosisCodes,
-      healthCheckRating,
+      discharge,
     });
   };
 
@@ -64,21 +51,11 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
         label="diagnosis Codes"
         fullWidth
         value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes([...diagnosisCodes, target.value])}
+        onChange={({ target }) => setDiagnosisCodes([target.value])}
       />
-      <InputLabel style={{ marginTop: 20 }}>Health Rating</InputLabel>
-      <Select
-        label="healthCheck Rating"
-        fullWidth
-        value={HealthCheckRating[healthCheckRating]}
-        onChange={onHealthCheckRatingChange}
-      >
-        {healthCheckRatingOptions.map((option) => (
-          <MenuItem key={option.label} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </Select>
+      <InputLabel style={{ marginTop: 20 }}>Discharge Entry</InputLabel>
+      <TextField name="date" label="date entry" fullWidth value={discharge.date} onChange={handleDichargeChange} />
+      <TextField name="criteria" label="criteria entry" fullWidth value={discharge.criteria} onChange={handleDichargeChange} />
 
       <Grid>
         <Grid item>
@@ -102,4 +79,4 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
   );
 };
 
-export default HealthCheckEntryForm;
+export default HospitalEntryForm;
