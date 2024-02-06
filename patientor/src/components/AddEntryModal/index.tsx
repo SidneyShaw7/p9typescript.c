@@ -18,16 +18,24 @@ const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
     setSelectedEntryType(entryType);
   };
 
+  const handleOnClose = () => {
+    onClose();
+    setTimeout(() => {
+      setSelectedEntryType('');
+    }, 250);
+  };
+
   const renderEntryForm = () => {
     switch (selectedEntryType) {
       case 'HealthCheck':
-        return <HealthCheckEntryForm onCancel={onClose} onSubmit={onSubmit} />;
+        return <HealthCheckEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
       case 'Hospital':
-        return <HospitalEntryForm onCancel={onClose} onSubmit={onSubmit} />;
+        return <HospitalEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType}/>;
     }
     // Logic to render the specific entry form based on 'entryType'
     onClose(); // Close the modal
-    setSelectedEntryType(''); // modal to default
+    // setSelectedEntryType(''); // modal to default
+    // handleOnClose();
   };
 
   return (

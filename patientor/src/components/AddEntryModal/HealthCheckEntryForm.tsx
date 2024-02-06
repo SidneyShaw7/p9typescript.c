@@ -7,6 +7,7 @@ import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEven
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
+  onChangeEntryType: (newState: string) => void;
 }
 
 interface HealthCheckRatingOption {
@@ -21,7 +22,7 @@ const healthCheckRatingOptions: HealthCheckRatingOption[] = Object.keys(HealthCh
     label: key,
   }));
 
-const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
+const HealthCheckEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -47,6 +48,8 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
       diagnosisCodes,
       healthCheckRating,
     });
+    
+    onChangeEntryType('');
   };
 
   return (
@@ -64,7 +67,7 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
         label="diagnosis Codes"
         fullWidth
         value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes([...diagnosisCodes, target.value])}
+        onChange={({ target }) => setDiagnosisCodes([target.value])}
       />
       <InputLabel style={{ marginTop: 20 }}>Health Rating</InputLabel>
       <Select

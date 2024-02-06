@@ -7,9 +7,10 @@ import { TextField, InputLabel, Grid, Button, Box } from '@mui/material';
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
+  onChangeEntryType: (newState: string) => void;
 }
 
-const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
+const HospitalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -34,6 +35,8 @@ const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
       diagnosisCodes,
       discharge,
     });
+
+    onChangeEntryType('');
   };
 
   return (
