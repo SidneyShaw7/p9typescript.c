@@ -13,16 +13,18 @@ const OccupationalHealthcareEntryComp = ({ entry }: { entry: OccupationalHealthc
       <ListItem style={style}>
         <ListItemText primary={'employer: ' + entry.employerName} />
       </ListItem>
-      <Divider />
-      {entry.sickLeave && (
+      {entry.sickLeave?.startDate && (
         <>
+          <Divider />
           <ListItem>
             <ListItemText primary={'start date: ' + entry.sickLeave.startDate} />
           </ListItem>
-          <ListItem>
-            <ListItemText primary={'end date: ' + entry.sickLeave.endDate} />
-          </ListItem>
         </>
+      )}
+      {entry.sickLeave?.endDate && (
+        <ListItem>
+          <ListItemText primary={'end date: ' + entry.sickLeave.endDate} />
+        </ListItem>
       )}
     </div>
   );

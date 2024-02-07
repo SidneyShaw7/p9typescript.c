@@ -3,6 +3,7 @@ import { Diagnoses } from '../../types';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import { List } from '@mui/material';
 
 const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Diagnoses[] }) => {
   return (
@@ -17,19 +18,17 @@ const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Dia
         <ListItemText primary={entry.description} />
       </ListItem>
       <Divider component="li" />
-      {entry.diagnosisCodes && (
-        <ul>
-          {entry.diagnosisCodes.map((code) => {
-            if (diagnoses) {
-              const diagnose = diagnoses.find((d) => d.code === code);
-              return (
-                <ListItem key={code}>
-                  <ListItemText primary={code + ' - ' + (diagnose ? diagnose.name : 'Unknown diagnosis')} />
-                </ListItem>
-              );
-            }
-          })}
-        </ul>
+      {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 && (
+        <>
+          <Divider component="li" />
+          <List>
+            {entry.diagnosisCodes.map((code) => (
+              <ListItem key={code}>
+                <ListItemText primary={`${code} - ${diagnoses.find((d) => d.code === code)?.name || 'Unknown diagnosis'}`} />
+              </ListItem>
+            ))}
+          </List>
+        </>
       )}
       <Divider component="li" />
       <ListItem>

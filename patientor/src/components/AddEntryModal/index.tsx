@@ -3,6 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, Divider, Alert } from '@mui
 import HealthCheckEntryForm from './HealthCheckEntryForm';
 import HospitalEntryForm from './HospitalEntryForm';
 import { NewEntriesEntry } from '../../types';
+import OccupationalEntryForm from './OccupationalEntryForm';
 
 interface Props {
   modalOpen: boolean;
@@ -30,7 +31,9 @@ const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
       case 'HealthCheck':
         return <HealthCheckEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
       case 'Hospital':
-        return <HospitalEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType}/>;
+        return <HospitalEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
+      case 'OccupationalHealthcare':
+        return <OccupationalEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
     }
     // Logic to render the specific entry form based on 'entryType'
     onClose(); // Close the modal
@@ -47,7 +50,7 @@ const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
           <DialogContent>
             <Button onClick={() => handleEntrySelect('Hospital')}>Hospital Entry</Button>
             <Button onClick={() => handleEntrySelect('HealthCheck')}>HealthCare Check</Button>
-            <Button onClick={() => handleEntrySelect('occupational')}>Occupational Entry</Button>
+            <Button onClick={() => handleEntrySelect('OccupationalHealthcare')}>Occupational Entry</Button>
             {error && <Alert severity="error">{error}</Alert>}
           </DialogContent>
         </>

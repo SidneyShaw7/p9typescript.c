@@ -51,6 +51,8 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) 
     
     onChangeEntryType('');
   };
+  console.log(diagnosisCodes);
+  
 
   return (
     <Box
