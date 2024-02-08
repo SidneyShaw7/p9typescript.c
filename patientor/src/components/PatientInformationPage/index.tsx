@@ -12,7 +12,7 @@ import patientService from '../../services/patients';
 import diagnosesService from '../../services/diagnoses';
 
 import { NewEntriesEntry, Patient } from '../../types';
-import { Diagnoses } from '../../types';
+import { Diagnosis } from '../../types';
 
 import PatientEntryDetails from '../PatientEntryDetails';
 import AddEntryModal from '../AddEntryModal';
@@ -20,7 +20,7 @@ import AddEntryModal from '../AddEntryModal';
 const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient | undefined>();
-  const [diagnoses, setDiagnoses] = useState<Diagnoses[]>();
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
   // const [entries, setEntries] = useState<Entry>();
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);

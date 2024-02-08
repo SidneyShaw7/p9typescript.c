@@ -77,14 +77,13 @@ const toNewEntry = (objectEntry) => {
     if ('description' in entry &&
         'date' in entry &&
         'specialist' in entry &&
-        'type' in entry) {
+        'type' in entry &&
+        'diagnosisCodes') {
         const baseEntry = {
             description: parseDescription(entry.description),
             date: parseDate(entry.date),
             specialist: parseSpecialist(entry.specialist),
-            diagnosisCodes: entry.diagnosisCodes
-                ? parseDiagnosisCodes(entry.diagnosisCodes)
-                : undefined,
+            diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes),
         };
         switch (entry.type) {
             case 'HealthCheck':

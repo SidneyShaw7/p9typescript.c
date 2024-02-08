@@ -1,11 +1,11 @@
 import { Entry } from '../../types';
-import { Diagnoses } from '../../types';
+import { Diagnosis } from '../../types';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { List } from '@mui/material';
 
-const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Diagnoses[] }) => {
+const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Diagnosis[] }) => {
   return (
     <div>
       <ListItem sx={{ textAlign: 'left' }}>

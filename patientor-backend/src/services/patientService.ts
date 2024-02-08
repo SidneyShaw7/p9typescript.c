@@ -36,11 +36,14 @@ const addEntry = (entry: NewEntriesEntry, id: string): Entry | string => {
   };
 
   const patient = patients.find((p) => p.id === id);
+  console.log('New Entry:', newEntry);
 
   if (patient) {
     patient.entries = patient.entries
       ? [...patient.entries, newEntry]
       : [newEntry];
+    console.log('Updated entries:', patient.entries);
+
     return newEntry;
   } else {
     return 'Patient not found';

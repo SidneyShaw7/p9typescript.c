@@ -26,10 +26,12 @@ const addPatient = (entry) => {
 const addEntry = (entry, id) => {
     const newEntry = Object.assign({ id: (0, uuid_1.v4)() }, entry);
     const patient = patients_full_1.default.find((p) => p.id === id);
+    console.log('New Entry:', newEntry);
     if (patient) {
         patient.entries = patient.entries
             ? [...patient.entries, newEntry]
             : [newEntry];
+        console.log('Updated entries:', patient.entries);
         return newEntry;
     }
     else {
