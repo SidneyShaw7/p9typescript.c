@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, Divider, Alert } from '@mui/material';
+import { Button, DialogTitle, DialogContent, Divider, Alert } from '@mui/material';
 import HealthCheckEntryForm from './HealthCheckEntryForm';
 import HospitalEntryForm from './HospitalEntryForm';
 import { NewEntriesEntry } from '../../types';
 import OccupationalEntryForm from './OccupationalEntryForm';
+// import { Margin } from '@mui/icons-material';
 
 interface Props {
   modalOpen: boolean;
@@ -19,21 +20,25 @@ const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
     setSelectedEntryType(entryType);
   };
 
-  const handleOnClose = () => {
-    onClose();
-    setTimeout(() => {
-      setSelectedEntryType('');
-    }, 250);
+  // const handleOnClose = () => {
+  //   onClose();
+  //   setTimeout(() => {
+  //     setSelectedEntryType('');
+  //   }, 250);
+  // };
+
+  const getButtonVariant = (buttonType: string) => {
+    return selectedEntryType === buttonType ? 'contained' : 'outlined';
   };
 
   const renderEntryForm = () => {
     switch (selectedEntryType) {
       case 'HealthCheck':
-        return <HealthCheckEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
+        return <HealthCheckEntryForm onCancel={onClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
       case 'Hospital':
-        return <HospitalEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
+        return <HospitalEntryForm onCancel={onClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
       case 'OccupationalHealthcare':
-        return <OccupationalEntryForm onCancel={handleOnClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
+        return <OccupationalEntryForm onCancel={onClose} onSubmit={onSubmit} onChangeEntryType={setSelectedEntryType} />;
     }
     // Logic to render the specific entry form based on 'entryType'
     onClose(); // Close the modal
@@ -42,27 +47,37 @@ const AddEntryModal = ({ onClose, modalOpen, error, onSubmit }: Props) => {
   };
 
   return (
-    <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
-      {!selectedEntryType ? (
-        <>
-          <DialogTitle>Choose Entry Type</DialogTitle>
-          <Divider />
-          <DialogContent>
-            <Button onClick={() => handleEntrySelect('Hospital')}>Hospital Entry</Button>
-            <Button onClick={() => handleEntrySelect('HealthCheck')}>HealthCare Check</Button>
-            <Button onClick={() => handleEntrySelect('OccupationalHealthcare')}>Occupational Entry</Button>
-            {error && <Alert severity="error">{error}</Alert>}
-          </DialogContent>
-        </>
-      ) : (
-        <>
-          <DialogTitle>Type {selectedEntryType} Entry</DialogTitle>
-          <Divider />
-          <DialogContent>{renderEntryForm()}</DialogContent>
+    // <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
+    <>
+      <>
+        {!selectedEntryType && <DialogTitle>Choose Entry Type</DialogTitle>}
+        <Divider />
+        <DialogContent>
+          <Button variant={getButtonVariant('Hospital')} onClick={() => handleEntrySelect('Hospital')}>
+            Hospital Entry
+          </Button>
+          <Button variant={getButtonVariant('HealthCheck')} onClick={() => handleEntrySelect('HealthCheck')}>
+            HealthCare Check
+          </Button>
+          <Button
+            variant={getButtonVariant('OccupationalHealthcare')}
+            onClick={() => handleEntrySelect('OccupationalHealthcare')}
+          >
+            Occupational Entry
+          </Button>
+          {selectedEntryType && <DialogContent>{renderEntryForm()}</DialogContent>}
           {error && <Alert severity="error">{error}</Alert>}
-        </>
-      )}
-    </Dialog>
+        </DialogContent>
+        <Divider style={{marginBottom: 20}}/>
+      </>
+      <>
+        {/* <DialogTitle>Type {selectedEntryType} Entry</DialogTitle>
+        <Divider />
+        <DialogContent>{renderEntryForm()}</DialogContent>
+        {error && <Alert severity="error">{error}</Alert>} */}
+      </>
+    </>
+    // </Dialog>
   );
 };
 

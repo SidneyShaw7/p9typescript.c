@@ -23,6 +23,14 @@ const PatientInformationPage = () => {
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
   // const [entries, setEntries] = useState<Entry>();
 
+  // SHOW FORM
+  const [showForm, setShowForm] = useState(false);
+
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
+  // SHOW FORM
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const openModal = (): void => setModalOpen(true);
 
@@ -95,16 +103,14 @@ const PatientInformationPage = () => {
   const submitNewEntry = async (values: NewEntriesEntry) => {
     try {
       if (id) {
-        // console.log(id);
-        // console.log(values);
-
         const entry = await patientService.createEntry(values, id);
 
         if (patient) {
           const updatedEntries = [...patient.entries, entry];
           const updatedPatient = { ...patient, entries: updatedEntries };
           setPatient(updatedPatient);
-          setModalOpen(false);
+          toggleForm();
+          // setModalOpen(false);
         }
       }
     } catch (e: unknown) {
@@ -137,10 +143,13 @@ const PatientInformationPage = () => {
           <div>{'Occupation: ' + patient.occupation}</div>
           <h2>Entries</h2>
           <div>
-            <Button variant="contained" onClick={() => openModal()}>
-              Add New Entry
-            </Button>
-            <AddEntryModal onSubmit={submitNewEntry} modalOpen={modalOpen} onClose={closeModal} />
+            {!showForm ? (
+              <Button variant="contained" onClick={toggleForm}>
+                Add New Entry
+              </Button>
+            ) : (
+              <AddEntryModal onSubmit={submitNewEntry} modalOpen={modalOpen} onClose={toggleForm} />
+            )}
           </div>
           <div>
             {patient.entries.length > 0 && diagnoses ? (
