@@ -2,9 +2,14 @@ import { HealthCheckEntry } from '../../types';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ListItem from '@mui/material/ListItem';
 
+const style = {
+  paddingTop: 0,
+  paddingBottom: 0
+};
+
 const HealthCheckEntryComp = ({ entry }: { entry: HealthCheckEntry }) => {
   return (
-    <ListItem>
+    <ListItem style={style}>
       <FavoriteIcon
         sx={{
           color:

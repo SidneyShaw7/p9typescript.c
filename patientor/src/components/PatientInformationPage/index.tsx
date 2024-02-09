@@ -95,8 +95,8 @@ const PatientInformationPage = () => {
   const submitNewEntry = async (values: NewEntriesEntry) => {
     try {
       if (id) {
-        console.log(id);
-        console.log(values);
+        // console.log(id);
+        // console.log(values);
 
         const entry = await patientService.createEntry(values, id);
 

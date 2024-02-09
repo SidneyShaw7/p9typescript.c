@@ -48,11 +48,12 @@ router.post('/:id/entries', (req, res) => {
     try {
         const newEntry = (0, entriesEntryUtils_1.default)(req.body);
         const userId = req.params.id;
+        // console.log("New entry: ", newEntry);
         const addedEntry = patientService_1.default.addEntry(newEntry, userId);
-        console.log('Request body:', req.body);
-        console.log(addedEntry);
-        res.json(req.body);
-        // res.json(addedEntry);
+        // console.log('Request body:', req.body);
+        // console.log(addedEntry);
+        // res.json(req.body);
+        res.json(addedEntry);
     }
     catch (error) {
         let errorMessage = 'Something went wrong.';

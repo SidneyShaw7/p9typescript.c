@@ -1,32 +1,31 @@
 import { OccupationalHealthcareEntry } from '../../types';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
 
 const style = {
-  alignItems: 'left',
+  paddingTop: 0,
+  paddingBottom: 0
 };
 
 const OccupationalHealthcareEntryComp = ({ entry }: { entry: OccupationalHealthcareEntry }) => {
   return (
-    <div>
+    <>
       <ListItem style={style}>
         <ListItemText primary={'employer: ' + entry.employerName} />
       </ListItem>
       {entry.sickLeave?.startDate && (
         <>
-          <Divider />
-          <ListItem>
+          <ListItem style={style}>
             <ListItemText primary={'start date: ' + entry.sickLeave.startDate} />
           </ListItem>
         </>
       )}
       {entry.sickLeave?.endDate && (
-        <ListItem>
+        <ListItem style={style}>
           <ListItemText primary={'end date: ' + entry.sickLeave.endDate} />
         </ListItem>
       )}
-    </div>
+    </>
   );
 };
 

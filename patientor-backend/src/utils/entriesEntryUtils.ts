@@ -1,6 +1,6 @@
 import {
   NewEntriesEntry,
-  Diagnosis,
+  // Diagnosis,
   Discharge,
   SickLeave,
   HealthCheckRating,
@@ -39,13 +39,13 @@ const parseSpecialist = (specialist: unknown): string => {
   return specialist;
 };
 
-const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
-  if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
-    return [] as Array<Diagnosis['code']>;
-  }
+// const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
+//   if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+//     return [] as Array<Diagnosis['code']>;
+//   }
 
-  return object.diagnosisCodes as Array<Diagnosis['code']>;
-};
+//   return object.diagnosisCodes as Array<Diagnosis['code']>;
+// };
 
 // HANDLE HEALTH-CHECK-ENTRY TYPEGUARDS
 
@@ -155,7 +155,7 @@ const toNewEntry = (objectEntry: unknown): NewEntriesEntry => {
       description: parseDescription(entry.description),
       date: parseDate(entry.date),
       specialist: parseSpecialist(entry.specialist),
-      diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes),
+      diagnosisCodes: entry.diagnosisCodes,
     };
 
     switch (entry.type) {

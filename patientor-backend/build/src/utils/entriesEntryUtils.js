@@ -25,12 +25,12 @@ const parseSpecialist = (specialist) => {
         throw new Error('Incorrect or missing specialist.');
     return specialist;
 };
-const parseDiagnosisCodes = (object) => {
-    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
-        return [];
-    }
-    return object.diagnosisCodes;
-};
+// const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
+//   if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+//     return [] as Array<Diagnosis['code']>;
+//   }
+//   return object.diagnosisCodes as Array<Diagnosis['code']>;
+// };
 // HANDLE HEALTH-CHECK-ENTRY TYPEGUARDS
 const isHealthCheckRating = (param) => {
     return Object.values(types_1.HealthCheckRating).includes(param);
@@ -83,7 +83,7 @@ const toNewEntry = (objectEntry) => {
             description: parseDescription(entry.description),
             date: parseDate(entry.date),
             specialist: parseSpecialist(entry.specialist),
-            diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes),
+            diagnosisCodes: entry.diagnosisCodes,
         };
         switch (entry.type) {
             case 'HealthCheck':

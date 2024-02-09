@@ -1,4 +1,4 @@
-import { Entry, Diagnoses } from '../../types';
+import { Entry, Diagnosis } from '../../types';
 import CommonEntryDetails from './CommonEntryDetails';
 import HospitalEntryComp from './HospitalEntryComp';
 import HealthCheckEntryComp from './HealthCheckEntryComp';
@@ -15,14 +15,14 @@ const style = {
   border: '1px solid',
   borderColor: 'divider',
   backgroundColor: 'background.paper',
-  margin: 5,
+  marginTop: 5,
 };
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
 };
 
-const PatientEntryDetails: React.FC<{ entry: Entry; diagnoses: Diagnoses[] }> = ({ entry, diagnoses }) => {
+const PatientEntryDetails: React.FC<{ entry: Entry; diagnoses: Diagnosis[] }> = ({ entry, diagnoses }) => {
   switch (entry.type) {
     case 'Hospital':
       return (
@@ -44,6 +44,7 @@ const PatientEntryDetails: React.FC<{ entry: Entry; diagnoses: Diagnoses[] }> = 
       return (
         <List style={style}>
           <CommonEntryDetails entry={entry} diagnoses={diagnoses} />
+          <Divider />
           <HealthCheckEntryComp entry={entry} />
         </List>
       );

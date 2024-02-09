@@ -1,19 +1,22 @@
 import { HospitalEntry } from '../../types';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
+
+const style = {
+  paddingTop: 0,
+  paddingBottom: 0
+};
 
 const HospitalEntryComp = ({ entry }: { entry: HospitalEntry }) => {
   return (
-    <div>
-      <ListItem>
+    <>
+      <ListItem style={style}>
         <ListItemText primary={'discharge date: ' + entry.discharge.date} />
       </ListItem>
-      <Divider component="li" />
-      <ListItem>
+      <ListItem style={style}>
         <ListItemText primary={'criteria: ' + entry.discharge.criteria} />
       </ListItem>
-    </div>
+    </>
   );
 };
 

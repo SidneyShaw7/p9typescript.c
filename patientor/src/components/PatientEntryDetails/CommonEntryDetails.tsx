@@ -2,39 +2,47 @@ import { Entry } from '../../types';
 import { Diagnosis } from '../../types';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import { List } from '@mui/material';
+import { List, Typography } from '@mui/material';
+
+// import { styled } from '@mui/material/styles';
+// import Divider from '@mui/material/Divider';
+// import Chip from '@mui/material/Chip';
+
+const style = {
+  paddingTop: 0,
+  paddingBottom: 0,
+};
+
+const typeStyle = {
+  fontStyle: 'italic',
+};
 
 const CommonEntryDetails = ({ entry, diagnoses }: { entry: Entry; diagnoses: Diagnosis[] }) => {
   return (
-    <div>
-      <ListItem sx={{ textAlign: 'left' }}>
-        <ListItemText secondary="entry date: " />
-        <ListItemText style={{ textAlign: 'left' }} primary={entry.date} />
+    <>
+      <ListItem style={style}>
+        <ListItemText primary={entry.date} />
       </ListItem>
-      <Divider component="li" />
-      <ListItem>
-        <ListItemText secondary="discription: " />
-        <ListItemText primary={entry.description} />
+      <ListItem style={style}>
+        <Typography style={typeStyle}>
+          <ListItemText primary={entry.description} />
+        </Typography>
       </ListItem>
-      <Divider component="li" />
       {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 && (
         <>
-          <Divider component="li" />
-          <List>
+          <List style={style}>
             {entry.diagnosisCodes.map((code) => (
-              <ListItem key={code}>
+              <ListItem style={style} key={code}>
                 <ListItemText primary={`${code} - ${diagnoses.find((d) => d.code === code)?.name || 'Unknown diagnosis'}`} />
               </ListItem>
             ))}
           </List>
         </>
       )}
-      <Divider component="li" />
-      <ListItem>
-        <ListItemText primary={'diagnose by: ' + entry.specialist} />
+      <ListItem style={style}>
+        <ListItemText primary={'diagnosed by: ' + entry.specialist} />
       </ListItem>
-    </div>
+    </>
   );
 };
 
