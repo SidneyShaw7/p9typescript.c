@@ -2,12 +2,12 @@ import { useState, SyntheticEvent } from 'react';
 
 import { NewEntriesEntry, HealthCheckRating } from '../../types';
 
-import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Box } from '@mui/material';
+import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Box, FormControl } from '@mui/material';
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
-  onChangeEntryType: (newState: string) => void;
+  // onChangeEntryType: (newState: string) => void;
   error?: string;
 }
 
@@ -23,7 +23,7 @@ const healthCheckRatingOptions: HealthCheckRatingOption[] = Object.keys(HealthCh
     label: key,
   }));
 
-const HealthCheckEntryForm = ({ onCancel, onSubmit, error }: Props) => {
+const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -49,8 +49,6 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit, error }: Props) => {
       diagnosisCodes,
       healthCheckRating,
     });
-
-    // onChangeEntryType('');
   };
 
   return (
@@ -63,19 +61,16 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit, error }: Props) => {
     >
       <>
         <TextField
-          helperText={error && 'Incorrect entry.'}
-          label="description"
-          fullWidth
-          value={description}
-          onChange={({ target }) => setDescription(target.value)}
-        />
-        <TextField
-          helperText={error && 'Incorrect entry.'}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          type="date"
           label="date"
           fullWidth
           value={date}
           onChange={({ target }) => setDate(target.value)}
         />
+        <TextField label="description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
         <TextField label="specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
         <TextField
           label="diagnosis Codes"
@@ -83,6 +78,26 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit, error }: Props) => {
           value={diagnosisCodes}
           onChange={({ target }) => setDiagnosisCodes([target.value])}
         />
+        <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">diagnosis Codes</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {names.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.indexOf(name) > -1} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
         <InputLabel style={{ marginTop: 20 }}>Health Rating</InputLabel>
         <Select
           label="healthCheck Rating"

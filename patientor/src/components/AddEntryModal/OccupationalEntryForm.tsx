@@ -7,10 +7,10 @@ import { TextField, InputLabel, Grid, Button, Box } from '@mui/material';
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
-  onChangeEntryType: (newState: string) => void;
+  // onChangeEntryType: (newState: string) => void;
 }
 
-const OccupationalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => {
+const OccupationalEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -40,8 +40,6 @@ const OccupationalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props)
       employerName,
       sickLeave,
     });
-
-    onChangeEntryType('');
   };
 
   return (
@@ -52,8 +50,17 @@ const OccupationalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props)
         '& > :not(style)': { m: 0.4 },
       }}
     >
+      <TextField
+        InputLabelProps={{
+          shrink: true,
+        }}
+        type="date"
+        label="date"
+        fullWidth
+        value={date}
+        onChange={({ target }) => setDate(target.value)}
+      />
       <TextField label="description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
-      <TextField label="date" fullWidth value={date} onChange={({ target }) => setDate(target.value)} />
       <TextField label="specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
       <TextField
         label="diagnosis Codes"
@@ -65,12 +72,26 @@ const OccupationalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props)
       <InputLabel style={{ marginTop: 20 }}>Sick Leave Entry</InputLabel>
       <TextField
         name="startDate"
+        type="date"
+        InputLabelProps={{
+          shrink: true,
+        }}
         label="start date entry"
         fullWidth
         value={sickLeave.startDate}
         onChange={handleSickLeaveChange}
       />
-      <TextField name="endDate" label="end date entry" fullWidth value={sickLeave.endDate} onChange={handleSickLeaveChange} />
+      <TextField
+        type="date"
+        name="endDate"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        label="end date entry"
+        fullWidth
+        value={sickLeave.endDate}
+        onChange={handleSickLeaveChange}
+      />
 
       <Grid>
         <Grid item>

@@ -31,16 +31,27 @@ const PatientInformationPage = () => {
   };
   // SHOW FORM
 
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const openModal = (): void => setModalOpen(true);
+  // const [modalOpen, setModalOpen] = useState<boolean>(false);
+  // const openModal = (): void => setModalOpen(true);
 
-  const closeModal = (): void => {
-    setModalOpen(false);
-    setError(undefined);
-  };
+  // const closeModal = (): void => {
+  //   setModalOpen(false);
+  //   setError(undefined);
+  // };
 
   const match = useMatch('/patients/:id');
   const id = match ? match.params.id : null;
+
+  // TIMEOUT ERROR
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(undefined);
+    }, 2500);
+
+    // Cleanup function to cancel the timeout if the component unmounts
+    return () => clearTimeout(timer);
+  }, [error]);
 
   // FETCHING PATIENT INFO
 
@@ -131,7 +142,6 @@ const PatientInformationPage = () => {
 
   return (
     <div>
-      {error && <Alert severity="error">{error}</Alert>}
       {patient && (
         <div>
           <h3>
@@ -142,13 +152,14 @@ const PatientInformationPage = () => {
           <div>{'SSN: ' + patient.ssn}</div>
           <div>{'Occupation: ' + patient.occupation}</div>
           <h2>Entries</h2>
+          {error && <Alert severity="error">{error}</Alert>}
           <div>
             {!showForm ? (
               <Button variant="contained" onClick={toggleForm}>
                 Add New Entry
               </Button>
             ) : (
-              <AddEntryModal onSubmit={submitNewEntry} modalOpen={modalOpen} onClose={toggleForm} />
+              <AddEntryModal onSubmit={submitNewEntry} onClose={toggleForm} error={error} />
             )}
           </div>
           <div>

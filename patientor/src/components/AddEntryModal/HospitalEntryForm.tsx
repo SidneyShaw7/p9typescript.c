@@ -7,10 +7,10 @@ import { TextField, InputLabel, Grid, Button, Box } from '@mui/material';
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
-  onChangeEntryType: (newState: string) => void;
+  // onChangeEntryType: (newState: string) => void;
 }
 
-const HospitalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => {
+const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -35,8 +35,6 @@ const HospitalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => 
       diagnosisCodes,
       discharge,
     });
-
-    onChangeEntryType('');
   };
 
   return (
@@ -47,8 +45,17 @@ const HospitalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => 
         '& > :not(style)': { m: 0.4 },
       }}
     >
+      <TextField
+        InputLabelProps={{
+          shrink: true,
+        }}
+        type="date"
+        label="date"
+        fullWidth
+        value={date}
+        onChange={({ target }) => setDate(target.value)}
+      />
       <TextField label="description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
-      <TextField label="date" fullWidth value={date} onChange={({ target }) => setDate(target.value)} />
       <TextField label="specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
       <TextField
         label="diagnosis Codes"
@@ -57,7 +64,17 @@ const HospitalEntryForm = ({ onCancel, onSubmit, onChangeEntryType }: Props) => 
         onChange={({ target }) => setDiagnosisCodes([target.value])}
       />
       <InputLabel style={{ marginTop: 20 }}>Discharge Entry</InputLabel>
-      <TextField name="date" label="date entry" fullWidth value={discharge.date} onChange={handleDichargeChange} />
+      <TextField
+        InputLabelProps={{
+          shrink: true,
+        }}
+        type='date'
+        name="date"
+        label="date entry"
+        fullWidth
+        value={discharge.date}
+        onChange={handleDichargeChange}
+      />
       <TextField name="criteria" label="criteria entry" fullWidth value={discharge.criteria} onChange={handleDichargeChange} />
 
       <Grid>

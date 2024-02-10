@@ -4,10 +4,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { List, Typography } from '@mui/material';
 
-// import { styled } from '@mui/material/styles';
-// import Divider from '@mui/material/Divider';
-// import Chip from '@mui/material/Chip';
-
 const style = {
   paddingTop: 0,
   paddingBottom: 0,
