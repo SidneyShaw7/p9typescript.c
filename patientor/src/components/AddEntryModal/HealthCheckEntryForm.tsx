@@ -1,14 +1,27 @@
 import { useState, SyntheticEvent } from 'react';
 
-import { NewEntriesEntry, HealthCheckRating } from '../../types';
+import { NewEntriesEntry, HealthCheckRating, Diagnosis } from '../../types';
 
-import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Box, FormControl } from '@mui/material';
+import {
+  TextField,
+  InputLabel,
+  MenuItem,
+  Select,
+  Grid,
+  Button,
+  SelectChangeEvent,
+  Box,
+  FormControl,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
+} from '@mui/material';
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
-  // onChangeEntryType: (newState: string) => void;
   error?: string;
+  diagnoses: Diagnosis[];
 }
 
 interface HealthCheckRatingOption {
@@ -23,7 +36,18 @@ const healthCheckRatingOptions: HealthCheckRatingOption[] = Object.keys(HealthCh
     label: key,
   }));
 
-const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const HealthCheckEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -37,6 +61,15 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
     if (healthCheckRating) {
       setHealthCheckRating(HealthCheckRating[healthCheckRating as keyof typeof HealthCheckRating]);
     }
+  };
+
+  const handleCodeChange = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
+    const {
+      target: { value },
+    } = event;
+    setDiagnosisCodes(
+      typeof value === 'string' ? value.split(',') : value
+    );
   };
 
   const addEntry = (e: SyntheticEvent) => {
@@ -59,48 +92,42 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
         '& > :not(style)': { m: 0.4 },
       }}
     >
-      <>
         <TextField
           InputLabelProps={{
             shrink: true,
           }}
           type="date"
-          label="date"
+          label="Date"
           fullWidth
           value={date}
           onChange={({ target }) => setDate(target.value)}
         />
-        <TextField label="description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
-        <TextField label="specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
-        <TextField
-          label="diagnosis Codes"
-          fullWidth
-          value={diagnosisCodes}
-          onChange={({ target }) => setDiagnosisCodes([target.value])}
-        />
-        <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">diagnosis Codes</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput label="Tag" />}
-          renderValue={(selected) => selected.join(', ')}
-          MenuProps={MenuProps}
-        >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <TextField label="Description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
+        <TextField label="Specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
+        <FormControl fullWidth>
+          <InputLabel id="demo-multiple-checkbox-label">Diagnoses Codes</InputLabel>
+          <Select
+            label="Diagnoses Codes"
+            fullWidth
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={diagnosisCodes}
+            onChange={handleCodeChange}
+            input={<OutlinedInput label="Diagnoses Codes" />}
+            renderValue={(selected) => selected.join(', ')}
+            MenuProps={MenuProps}
+          >
+            {diagnoses.map((diagnose) => (
+              <MenuItem key={diagnose.code} value={diagnose.code}>
+                <Checkbox checked={diagnosisCodes.indexOf(diagnose.code) > -1} />
+                <ListItemText primary={diagnose.code + ' - ' + diagnose.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <InputLabel style={{ marginTop: 20 }}>Health Rating</InputLabel>
         <Select
-          label="healthCheck Rating"
           fullWidth
           value={HealthCheckRating[healthCheckRating]}
           onChange={onHealthCheckRatingChange}
@@ -111,7 +138,6 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
             </MenuItem>
           ))}
         </Select>
-
         <Grid>
           <Grid item>
             <Button color="secondary" variant="contained" style={{ float: 'left' }} type="button" onClick={onCancel}>
@@ -130,7 +156,6 @@ const HealthCheckEntryForm = ({ onCancel, onSubmit }: Props) => {
             </Button>
           </Grid>
         </Grid>
-      </>
     </Box>
   );
 };

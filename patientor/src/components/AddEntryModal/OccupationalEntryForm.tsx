@@ -1,20 +1,44 @@
 import { useState, SyntheticEvent } from 'react';
 
-import { NewEntriesEntry, SickLeave } from '../../types';
+import { NewEntriesEntry, SickLeave, Diagnosis } from '../../types';
 
-import { TextField, InputLabel, Grid, Button, Box } from '@mui/material';
+import {
+  TextField,
+  InputLabel,
+  MenuItem,
+  Select,
+  Grid,
+  Button,
+  SelectChangeEvent,
+  Box,
+  FormControl,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
+} from '@mui/material';
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
-  // onChangeEntryType: (newState: string) => void;
+  diagnoses: Diagnosis[];
 }
 
-const OccupationalEntryForm = ({ onCancel, onSubmit }: Props) => {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const OccupationalEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
-  const [diagnosisCodesInput, setDiagnosisCodesInput] = useState<string>('');
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [employerName, setEmployerName] = useState('');
   const [sickLeave, setSickLeave] = useState<SickLeave>({ startDate: '', endDate: '' });
 
@@ -26,10 +50,17 @@ const OccupationalEntryForm = ({ onCancel, onSubmit }: Props) => {
     }));
   };
 
+  const handleCodeChange = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
+    const {
+      target: { value },
+    } = event;
+    setDiagnosisCodes(
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
+
   const addEntry = (e: SyntheticEvent) => {
     e.preventDefault();
-
-    const diagnosisCodes = diagnosisCodesInput.split(',').map((code) => code.trim());
 
     onSubmit({
       description,
@@ -55,20 +86,36 @@ const OccupationalEntryForm = ({ onCancel, onSubmit }: Props) => {
           shrink: true,
         }}
         type="date"
-        label="date"
+        label="Date"
         fullWidth
         value={date}
         onChange={({ target }) => setDate(target.value)}
       />
-      <TextField label="description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
-      <TextField label="specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
-      <TextField
-        label="diagnosis Codes"
-        fullWidth
-        value={diagnosisCodesInput}
-        onChange={({ target }) => setDiagnosisCodesInput(target.value)}
-      />
-      <TextField label="employer name" fullWidth value={employerName} onChange={({ target }) => setEmployerName(target.value)} />
+      <TextField label="Description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
+      <TextField label="Specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
+      <FormControl fullWidth>
+        <InputLabel id="demo-multiple-checkbox-label">Diagnoses Codes</InputLabel>
+        <Select
+          label="Diagnoses Codes"
+          fullWidth
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={diagnosisCodes}
+          onChange={handleCodeChange}
+          input={<OutlinedInput label="Diagnoses Codes" />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {diagnoses.map((diagnose) => (
+            <MenuItem key={diagnose.code} value={diagnose.code}>
+              <Checkbox checked={diagnosisCodes.indexOf(diagnose.code) > -1} />
+              <ListItemText primary={diagnose.code + ' - ' + diagnose.name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <TextField label="Employer Name" fullWidth value={employerName} onChange={({ target }) => setEmployerName(target.value)} />
       <InputLabel style={{ marginTop: 20 }}>Sick Leave Entry</InputLabel>
       <TextField
         name="startDate"
@@ -76,7 +123,7 @@ const OccupationalEntryForm = ({ onCancel, onSubmit }: Props) => {
         InputLabelProps={{
           shrink: true,
         }}
-        label="start date entry"
+        label="Start Date"
         fullWidth
         value={sickLeave.startDate}
         onChange={handleSickLeaveChange}
@@ -87,7 +134,7 @@ const OccupationalEntryForm = ({ onCancel, onSubmit }: Props) => {
         InputLabelProps={{
           shrink: true,
         }}
-        label="end date entry"
+        label="End Date"
         fullWidth
         value={sickLeave.endDate}
         onChange={handleSickLeaveChange}

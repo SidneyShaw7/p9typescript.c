@@ -21,7 +21,6 @@ const PatientInformationPage = () => {
   const [error, setError] = useState<string>();
   const [patient, setPatient] = useState<Patient | undefined>();
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
-  // const [entries, setEntries] = useState<Entry>();
 
   // SHOW FORM
   const [showForm, setShowForm] = useState(false);
@@ -29,15 +28,6 @@ const PatientInformationPage = () => {
   const toggleForm = () => {
     setShowForm(!showForm);
   };
-  // SHOW FORM
-
-  // const [modalOpen, setModalOpen] = useState<boolean>(false);
-  // const openModal = (): void => setModalOpen(true);
-
-  // const closeModal = (): void => {
-  //   setModalOpen(false);
-  //   setError(undefined);
-  // };
 
   const match = useMatch('/patients/:id');
   const id = match ? match.params.id : null;
@@ -49,7 +39,6 @@ const PatientInformationPage = () => {
       setError(undefined);
     }, 2500);
 
-    // Cleanup function to cancel the timeout if the component unmounts
     return () => clearTimeout(timer);
   }, [error]);
 
@@ -159,7 +148,7 @@ const PatientInformationPage = () => {
                 Add New Entry
               </Button>
             ) : (
-              <AddEntryModal onSubmit={submitNewEntry} onClose={toggleForm} error={error} />
+              diagnoses && <AddEntryModal onSubmit={submitNewEntry} onClose={toggleForm} error={error} diagnoses={diagnoses} />
             )}
           </div>
           <div>

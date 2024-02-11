@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, DialogTitle, DialogContent, Divider } from '@mui/material';
 import HealthCheckEntryForm from './HealthCheckEntryForm';
 import HospitalEntryForm from './HospitalEntryForm';
-import { NewEntriesEntry } from '../../types';
+import { NewEntriesEntry, Diagnosis } from '../../types';
 import OccupationalEntryForm from './OccupationalEntryForm';
 
 interface Props {
@@ -10,21 +10,15 @@ interface Props {
   onClose: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
   error?: string;
+  diagnoses: Diagnosis[];
 }
 
-const AddEntryModal = ({ onClose, onSubmit }: Props) => {
+const AddEntryModal = ({ onClose, onSubmit, diagnoses }: Props) => {
   const [selectedEntryType, setSelectedEntryType] = useState('');
 
   const handleEntrySelect = (entryType: string) => {
     setSelectedEntryType(entryType);
   };
-
-  // const handleOnClose = () => {
-  //   onClose();
-  //   setTimeout(() => {
-  //     setSelectedEntryType('');
-  //   }, 250);
-  // };
 
   const getButtonVariant = (buttonType: string) => {
     return selectedEntryType === buttonType ? 'contained' : 'outlined';
@@ -33,13 +27,13 @@ const AddEntryModal = ({ onClose, onSubmit }: Props) => {
   const renderEntryForm = () => {
     switch (selectedEntryType) {
       case 'HealthCheck':
-        return <HealthCheckEntryForm onCancel={onClose} onSubmit={onSubmit} />;
+        return <HealthCheckEntryForm onCancel={onClose} onSubmit={onSubmit} diagnoses={diagnoses} />;
       case 'Hospital':
-        return <HospitalEntryForm onCancel={onClose} onSubmit={onSubmit} />;
+        return <HospitalEntryForm onCancel={onClose} onSubmit={onSubmit} diagnoses={diagnoses} />;
       case 'OccupationalHealthcare':
-        return <OccupationalEntryForm onCancel={onClose} onSubmit={onSubmit} />;
+        return <OccupationalEntryForm onCancel={onClose} onSubmit={onSubmit} diagnoses={diagnoses} />;
     }
-    onClose(); // Close the modal
+    onClose(); 
   };
 
   return (

@@ -1,16 +1,40 @@
 import { useState, SyntheticEvent } from 'react';
 
-import { NewEntriesEntry, Discharge } from '../../types';
+import { NewEntriesEntry, Discharge, Diagnosis } from '../../types';
 
-import { TextField, InputLabel, Grid, Button, Box } from '@mui/material';
+import {
+  TextField,
+  InputLabel,
+  Grid,
+  Button,
+  Box,
+  FormControl,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  SelectChangeEvent,
+} from '@mui/material';
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: NewEntriesEntry) => void;
-  // onChangeEntryType: (newState: string) => void;
+  diagnoses: Diagnosis[];
 }
 
-const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const HospitalEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
@@ -23,6 +47,15 @@ const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleCodeChange = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
+    const {
+      target: { value },
+    } = event;
+    setDiagnosisCodes(
+      typeof value === 'string' ? value.split(',') : value
+    );
   };
 
   const addEntry = (e: SyntheticEvent) => {
@@ -50,33 +83,48 @@ const HospitalEntryForm = ({ onCancel, onSubmit }: Props) => {
           shrink: true,
         }}
         type="date"
-        label="date"
+        label="Date"
         fullWidth
         value={date}
         onChange={({ target }) => setDate(target.value)}
       />
-      <TextField label="description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
-      <TextField label="specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
-      <TextField
-        label="diagnosis Codes"
-        fullWidth
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes([target.value])}
-      />
+      <TextField label="Description" fullWidth value={description} onChange={({ target }) => setDescription(target.value)} />
+      <TextField label="Specialist" fullWidth value={specialist} onChange={({ target }) => setSpecialist(target.value)} />
+      <FormControl fullWidth>
+        <InputLabel id="demo-multiple-checkbox-label">Diagnoses Codes</InputLabel>
+        <Select
+          label="Diagnoses Codes"
+          fullWidth
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={diagnosisCodes}
+          onChange={handleCodeChange}
+          input={<OutlinedInput label="Diagnoses Codes" />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {diagnoses.map((diagnose) => (
+            <MenuItem key={diagnose.code} value={diagnose.code}>
+              <Checkbox checked={diagnosisCodes.indexOf(diagnose.code) > -1} />
+              <ListItemText primary={diagnose.code + ' - ' + diagnose.name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <InputLabel style={{ marginTop: 20 }}>Discharge Entry</InputLabel>
       <TextField
         InputLabelProps={{
           shrink: true,
         }}
-        type='date'
+        type="date"
         name="date"
-        label="date entry"
+        label="Date"
         fullWidth
         value={discharge.date}
         onChange={handleDichargeChange}
       />
-      <TextField name="criteria" label="criteria entry" fullWidth value={discharge.criteria} onChange={handleDichargeChange} />
-
+      <TextField name="criteria" label="Criteria" fullWidth value={discharge.criteria} onChange={handleDichargeChange} />
       <Grid>
         <Grid item>
           <Button color="secondary" variant="contained" style={{ float: 'left' }} type="button" onClick={onCancel}>
